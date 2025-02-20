@@ -1,6 +1,8 @@
 #!/bin/bash
 # This script will launch AutomaticPlot.py with each set of parameters
 # The file should be in path MPCD/analysisScripts/AutomaticPlot.py
+# The code expect to have input.json in MPCD/sampleInputs/myExp/input.json
+# It will copy this input.json into Exp* folder which will create itself for each set of parameters
 # Feel free to adjust
 rm -rf Baziei* slurm-* MPCD0* MPCD1* MPCD2* MPCD3* MPCD4* MPCD5* MPCD6* MPCD7* MPCD8* MPCD9*
 rm -rf MPCD/sampleInputs/myExp/Exp*
