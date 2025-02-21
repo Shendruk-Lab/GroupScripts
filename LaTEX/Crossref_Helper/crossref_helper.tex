@@ -1,0 +1,56 @@
+%%% USAGE:
+%%% 1. Include this file using \input{/path/to/crossref_helper.tex}
+%%% 2. Call \myexternaldocument{path/to/file[without extension]} in the preamble
+%%% 3. (Overleaf) Requires a latexmkrc file to be added to the root repo with the content below.
+%%%
+%%% latexmkrc file content (copy, paste, uncomment, save with no extension):
+% add_cus_dep( 'tex', 'aux', 0, 'makeexternaldocument' );
+
+% sub makeexternaldocument {
+%     # if the dependency isn't one of the files that this latexmk run will consider, process it
+%     # without this test, we would get an infinite loop!
+%     if (!($root_filename eq $_[0]))
+%     {   # PLEASE ENABLE ONLY ONE OF THE FOLLOWING
+%         # DEPENDING ON THE ENGINE YOU'RE USING
+    
+%         # FOR PDFLATEX
+%         system( "latexmk -pdf \"$_[0]\"" );
+
+%         # FOR LATEX+DVIPDF
+%         # system( "latexmk \"$_[0]\"" );
+
+%         # FOR XELATEX
+%         # system( "latexmk -xelatex \"$_[0]\"" );
+        
+%         # FOR LUALATEX
+%         # system( "latexmk -lualatex \"$_[0]\"" );
+%    }
+% }
+
+%----Helper code for dealing with external references----
+% (by cyberSingularity at http://tex.stackexchange.com/a/69832/226)
+
+\usepackage{xr}
+\makeatletter
+
+\newcommand*{\addFileDependency}[1]{% argument=file name and extension
+\typeout{(#1)}% latexmk will find this if $recorder=0
+% however, in that case, it will ignore #1 if it is a .aux or 
+% .pdf file etc and it exists! If it doesn't exist, it will appear 
+% in the list of dependents regardless)
+%
+% Write the following if you want it to appear in \listfiles 
+% --- although not really necessary and latexmk doesn't use this
+%
+\@addtofilelist{#1}
+%
+% latexmk will find this message if #1 doesn't exist (yet)
+\IfFileExists{#1}{}{\typeout{No file #1.}}
+}\makeatother
+
+\newcommand*{\myexternaldocument}[1]{%
+\externaldocument{#1}%
+\addFileDependency{#1.tex}%
+\addFileDependency{#1.aux}%
+}
+%------------End of helper code--------------
